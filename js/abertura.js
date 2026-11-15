@@ -45,10 +45,11 @@ const SUAVIZACAO   = 0.14;    // 1 = cola na rolagem; menor = mais "seda"
     const BASE = 200;
     // mesmo tamanho óptico que o CSS usa no logotipo (as larguras mudam com ele)
     const opsz = parseFloat(getComputedStyle(raiz).getPropertyValue('--marca-opsz')) || 96;
+    const peso = parseFloat(getComputedStyle(raiz).getPropertyValue('--marca-peso')) || 700;
     const m = document.createElement('span');
     m.style.cssText =
       'position:absolute;left:-9999px;top:0;visibility:hidden;white-space:pre;' +
-      'font-family:"Bodoni Moda",serif;font-weight:700;font-kerning:normal;' +
+      'font-family:"Bodoni Moda",serif;font-weight:' + peso + ';font-kerning:normal;' +
       'font-variation-settings:"opsz" ' + opsz + ';line-height:1;font-size:' + BASE + 'px';
     document.body.appendChild(m);
     const w = s => { m.textContent = s; return m.getBoundingClientRect().width / BASE; };

@@ -38,8 +38,11 @@
 
   /* Contraste do logotipo: tamanho óptico da Bodoni (6 a 96).
      Menor = traços finos mais grossos; maior = traços finos mais delicados. */
-  --marca-opsz: 24;
-  --titulo-opsz: 28;
+  --marca-opsz: 96;         /* desenho original do logotipo */
+  --marca-peso: 660;        /* um pouco abaixo de 700 para compensar o contorno */
+  --marca-contorno: .02em;  /* engrossa todos os traços por igual: pesa nos finos, quase nada nos grossos */
+  --titulo-opsz: 18;
+  --titulo-contorno: .008em;
 
   --margem: clamp(22px, 5vw, 72px);
   --suave: cubic-bezier(.22, .7, .2, 1);   /* curva única para todas as revelações */
@@ -72,7 +75,11 @@ em { font-style: italic; }
 
 /* O logotipo usa sempre o mesmo desenho da Bodoni (--marca-opsz),
    para ter a mesma forma e o mesmo contraste em qualquer tamanho. */
-.marca, .topo__marca, .capa__marca, .rodape__marca { font-variation-settings: "opsz" var(--marca-opsz); }
+:root .marca, :root .topo__marca, :root .capa__marca, :root .rodape__marca {
+  font-variation-settings: "opsz" var(--marca-opsz);
+  font-weight: var(--marca-peso);
+  -webkit-text-stroke: var(--marca-contorno) currentColor;
+}
 
 /* Rótulo editorial: Poppins em caixa alta com espaçamento largo */
 .rotulo {
@@ -140,4 +147,8 @@ em { font-style: italic; }
    em corpo grande (sem isso o navegador usa o desenho mais delicado, opsz 96). */
 .manchete, .lide, .titulo, .pilares h3, .capa__numero, .acompanhe__link, .rodape__frase {
   font-variation-settings: "opsz" var(--titulo-opsz);
+  -webkit-text-stroke: var(--titulo-contorno) currentColor;
 }
+/* Com o tamanho óptico menor as hastes grossas ganham corpo; os títulos em
+   negrito descem um pouco de peso para não ficarem pesados demais. */
+:root .titulo { font-weight: 630; }

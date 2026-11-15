@@ -133,7 +133,7 @@
   display: grid; place-items: center; text-align: center;
 }
 .acompanhe__miolo { display: grid; justify-items: center; gap: clamp(22px, 4vh, 40px); }
-.titulo--grande { font-size: clamp(3.2rem, 1.4rem + 9vw, 10rem); line-height: .94; }
+.titulo--grande { font-size: clamp(3.2rem, 1.4rem + 9vw, 10rem); line-height: 1.1; }
 
 .acompanhe__link {
   display: inline-flex; align-items: center; gap: .35em;
