@@ -36,6 +36,11 @@
   --serifa: "Bodoni Moda", "Bodoni 72", Didot, "Times New Roman", serif;
   --sans:   "Poppins", "Helvetica Neue", Arial, sans-serif;
 
+  /* Contraste do logotipo: tamanho óptico da Bodoni (6 a 96).
+     Menor = traços finos mais grossos; maior = traços finos mais delicados. */
+  --marca-opsz: 24;
+  --titulo-opsz: 28;
+
   --margem: clamp(22px, 5vw, 72px);
   --suave: cubic-bezier(.22, .7, .2, 1);   /* curva única para todas as revelações */
 }
@@ -65,9 +70,9 @@ em { font-style: italic; }
 /* O ponto final da marca: sempre vermelho lacre sobre fundo claro ou escuro */
 .ponto { color: var(--lacre); }
 
-/* O logotipo usa sempre o desenho de corpo grande da Bodoni (opsz 96),
-   para ter a mesma forma em qualquer tamanho. */
-.marca, .topo__marca, .capa__marca, .rodape__marca { font-variation-settings: "opsz" 96; }
+/* O logotipo usa sempre o mesmo desenho da Bodoni (--marca-opsz),
+   para ter a mesma forma e o mesmo contraste em qualquer tamanho. */
+.marca, .topo__marca, .capa__marca, .rodape__marca { font-variation-settings: "opsz" var(--marca-opsz); }
 
 /* Rótulo editorial: Poppins em caixa alta com espaçamento largo */
 .rotulo {
@@ -129,4 +134,10 @@ em { font-style: italic; }
 @media (prefers-reduced-motion: reduce) {
   .js [data-revelar] { opacity: 1; transform: none; transition: none; }
   .topo { transition: none; }
+}
+
+/* Títulos em Bodoni: fixa o tamanho óptico para os traços finos não sumirem
+   em corpo grande (sem isso o navegador usa o desenho mais delicado, opsz 96). */
+.manchete, .lide, .titulo, .pilares h3, .capa__numero, .acompanhe__link, .rodape__frase {
+  font-variation-settings: "opsz" var(--titulo-opsz);
 }

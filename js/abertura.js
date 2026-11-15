@@ -43,11 +43,13 @@ const SUAVIZACAO   = 0.14;    // 1 = cola na rolagem; menor = mais "seda"
   // qualquer tamanho de tela sem medir de novo.
   function medir() {
     const BASE = 200;
+    // mesmo tamanho óptico que o CSS usa no logotipo (as larguras mudam com ele)
+    const opsz = parseFloat(getComputedStyle(raiz).getPropertyValue('--marca-opsz')) || 96;
     const m = document.createElement('span');
     m.style.cssText =
       'position:absolute;left:-9999px;top:0;visibility:hidden;white-space:pre;' +
       'font-family:"Bodoni Moda",serif;font-weight:700;font-kerning:normal;' +
-      'font-variation-settings:"opsz" 96;line-height:1;font-size:' + BASE + 'px';
+      'font-variation-settings:"opsz" ' + opsz + ';line-height:1;font-size:' + BASE + 'px';
     document.body.appendChild(m);
     const w = s => { m.textContent = s; return m.getBoundingClientRect().width / BASE; };
     const kern = (a, b) => w(a + b) - w(a) - w(b);
@@ -168,7 +170,7 @@ const SUAVIZACAO   = 0.14;    // 1 = cola na rolagem; menor = mais "seda"
       const aDir  = M.dA * (1 - e) + M.L.A;            // borda direita do "A"
       const pEsq  = M.xP + M.dP * (1 - e);             // borda esquerda do ponto
       const orig  = M.xV - FOLGA;                      // origem do miolo
-      const pena  = 0.7;                                // largura do esfumado da janela (em)
+      const pena  = 0.7;                               // largura do esfumado da janela (em)
       const jE = aDir - orig - pena * 0.55;
       const jD = pEsq - orig + pena * 0.55;
       const mascara = e >= 0.999 ? 'none'
@@ -179,7 +181,7 @@ const SUAVIZACAO   = 0.14;    // 1 = cola na rolagem; menor = mais "seda"
         m.el.style.transform = `translate(-50%, -50%) translateY(${y.toFixed(2)}px)`;
         m.a.style.transform  = `translateX(${(M.dA * (1 - e)).toFixed(4)}em)`;
         m.p.style.transform  = `translateX(${(M.dP * (1 - e)).toFixed(4)}em)`;
-        m.miolo.style.opacity = limitar((e - 0.15) / 0.7, 0, 1);  // as letras ganham opacidade aos poucos
+        m.miolo.style.opacity = limitar((e - 0.15) / 0.7, 0, 1);
         m.miolo.style.webkitMaskImage = mascara;
         m.miolo.style.maskImage = mascara;
         // as letras do meio nascem levemente recolhidas para o ponto de encontro
