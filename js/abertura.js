@@ -168,7 +168,7 @@ const SUAVIZACAO   = 0.14;    // 1 = cola na rolagem; menor = mais "seda"
       const aDir  = M.dA * (1 - e) + M.L.A;            // borda direita do "A"
       const pEsq  = M.xP + M.dP * (1 - e);             // borda esquerda do ponto
       const orig  = M.xV - FOLGA;                      // origem do miolo
-      const pena  = 0.14;                               // largura do esfumado da janela (em)
+      const pena  = 0.7;                                // largura do esfumado da janela (em)
       const jE = aDir - orig - pena * 0.55;
       const jD = pEsq - orig + pena * 0.55;
       const mascara = e >= 0.999 ? 'none'
@@ -179,7 +179,7 @@ const SUAVIZACAO   = 0.14;    // 1 = cola na rolagem; menor = mais "seda"
         m.el.style.transform = `translate(-50%, -50%) translateY(${y.toFixed(2)}px)`;
         m.a.style.transform  = `translateX(${(M.dA * (1 - e)).toFixed(4)}em)`;
         m.p.style.transform  = `translateX(${(M.dP * (1 - e)).toFixed(4)}em)`;
-        m.miolo.style.opacity = e <= 0.001 ? 0 : 1;
+        m.miolo.style.opacity = limitar((e - 0.15) / 0.7, 0, 1);  // as letras ganham opacidade aos poucos
         m.miolo.style.webkitMaskImage = mascara;
         m.miolo.style.maskImage = mascara;
         // as letras do meio nascem levemente recolhidas para o ponto de encontro
