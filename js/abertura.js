@@ -246,6 +246,7 @@ const SUAVIZACAO   = 0.14;    // 1 = cola na rolagem; menor = mais "seda"
     const gestos = ['wheel', 'touchstart', 'keydown', 'mousedown'];
     function pararPulo() {
       cancelAnimationFrame(pulo); pulo = 0;
+      raiz.style.scrollBehavior = '';
       gestos.forEach(g => window.removeEventListener(g, pararPulo));
     }
     pular.addEventListener('click', () => {
@@ -257,9 +258,12 @@ const SUAVIZACAO   = 0.14;    // 1 = cola na rolagem; menor = mais "seda"
       const dur = Math.max(1600, DURACAO_PULO * (dist / pista));
       const t0  = performance.now();
       gestos.forEach(g => window.addEventListener(g, pararPulo, { passive: true }));
+      // Enquanto o pulo anda, desliga a rolagem suave do CSS: senão o navegador
+      // (principalmente o Safari) tenta suavizar cada passo e a página não sai do lugar.
+      raiz.style.scrollBehavior = 'auto';
       const andar = agora => {
         const p = Math.min(1, (agora - t0) / dur);
-        window.scrollTo({ top: de + dist * entraSai(p), behavior: 'instant' });
+        window.scrollTo(0, de + dist * entraSai(p));
         if (p < 1) pulo = requestAnimationFrame(andar); else pararPulo();
       };
       pulo = requestAnimationFrame(andar);
