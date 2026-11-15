@@ -1,0 +1,163 @@
+/* ==========================================================================
+   AVAL. — abertura "O selo se abre"
+
+   Como funciona, em uma frase: a seção .abertura é mais alta que a tela
+   (a "pista" de rolagem) e o .abertura__palco fica grudado (sticky) enquanto
+   a pista passa. O JS só converte "quanto da pista já passou" (0 → 1) em
+   posições, tamanhos e recortes. Nada aqui sequestra a rolagem.
+
+   Estado padrão deste CSS = composição FINAL, estática (cena 5).
+   É o que aparece sem JS e para quem pede movimento reduzido.
+   A classe .abertura-animada (posta pelo JS) liga a sequência.
+   ========================================================================== */
+
+.abertura { position: relative; background: var(--marfim); }
+
+.abertura__palco {
+  position: relative;
+  height: 100vh;
+  height: 100svh;            /* no celular, ignora a barra do navegador que some e volta */
+  min-height: 520px;
+  overflow: hidden;
+}
+
+.camada { position: absolute; inset: 0; }
+.camada--papel { background: var(--marfim); color: var(--nanquim); z-index: 2; }
+.camada--lacre { background: var(--lacre);  color: var(--marfim);  z-index: 1; }
+.camada--lacre .ponto { color: var(--marfim); }
+
+/* --------------------------------------------------------------------------
+   A cena: marca no alto, manchete no centro, linha da edição embaixo
+   -------------------------------------------------------------------------- */
+.cena {
+  position: absolute; inset: 0;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  justify-items: center;
+  padding: clamp(26px, 5.5vh, 60px) var(--margem) clamp(30px, 6vh, 64px);
+  text-align: center;
+}
+
+.cena__alto { display: grid; justify-items: center; gap: clamp(14px, 2.4vh, 24px); }
+
+/* O "slot" reserva o lugar final da marca. A marca em si é absoluta e
+   centrada nele — assim o JS pode aumentá-la e levá-la ao centro da tela
+   sem empurrar o resto do layout. */
+.marca-slot {
+  --marca-final: clamp(2.9rem, 2rem + 4.6vw, 6.4rem);
+  position: relative;
+  width: 100%;
+  height: calc(var(--marca-final) * .86);
+}
+.marca {
+  position: absolute; left: 50%; top: 50%;
+  transform: translate(-50%, -50%);
+  font-family: var(--serifa);
+  font-weight: 700;
+  font-size: var(--marca-final);
+  line-height: 1;
+  white-space: nowrap;
+  font-kerning: normal;
+  user-select: none;
+}
+
+/* Depois que o JS monta a marca letra a letra (para poder mover cada parte) */
+.marca--montada { display: flex; align-items: baseline; }
+.marca__l { display: block; will-change: transform; }
+.marca__miolo {
+  display: flex; align-items: baseline;
+  /* folga para a máscara não cortar serifas que passam da caixa */
+  padding: .12em .14em; margin: -.12em -.14em;
+}
+
+.cena__temas { color: var(--pedra); }
+.camada--lacre .cena__temas { color: inherit; }
+
+/* Manchete */
+.manchete {
+  align-self: center;
+  font-family: var(--serifa);
+  font-weight: 400;
+  font-size: clamp(2.5rem, 1.2rem + 6.4vw, 7.4rem);
+  line-height: 1.02;
+  letter-spacing: -.012em;
+  padding-block: 2vh;
+}
+.manchete .linha { display: block; overflow: hidden; padding-bottom: .12em; margin-bottom: -.12em; }
+.manchete .linha > span { display: block; }
+.manchete em { color: var(--lacre); font-weight: 400; padding-right: .04em; }
+
+.cena__edicao { color: var(--pedra); }
+
+/* Telas baixas (celular deitado, janelas pequenas) */
+@media (max-height: 620px) {
+  .manchete { font-size: clamp(2rem, 11vh, 4.4rem); }
+}
+
+/* --------------------------------------------------------------------------
+   Controles discretos
+   -------------------------------------------------------------------------- */
+.pular {
+  position: absolute; z-index: 5;
+  right: var(--margem); bottom: clamp(24px, 5vh, 48px);
+  appearance: none; background: none; border: 0; cursor: pointer;
+  padding: 10px 0;
+  font-family: var(--sans); font-size: .62rem; font-weight: 500;
+  letter-spacing: .3em; text-transform: uppercase;
+  color: var(--marfim);
+  opacity: .72;
+  transition: opacity .4s, color .35s, visibility 0s;
+}
+.pular::after {
+  content: ""; display: block; height: 1px; margin-top: 6px; margin-right: .3em;
+  background: currentColor; opacity: .5;
+}
+.pular:hover, .pular:focus-visible { opacity: 1; }
+.pular.is-sobre-papel { color: var(--nanquim); }
+.pular.is-oculto { opacity: 0; visibility: hidden; transition: opacity .4s, visibility 0s .4s; }
+
+.role {
+  position: absolute; z-index: 5;
+  left: 50%; bottom: clamp(24px, 5vh, 48px);
+  transform: translateX(-50%);
+  display: grid; justify-items: center; gap: 12px;
+  font-size: .6rem; font-weight: 500; letter-spacing: .34em; text-transform: uppercase;
+  color: var(--marfim);
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 1.2s var(--suave);
+}
+.role span { padding-left: .34em; }
+.role::after {
+  content: ""; width: 1px; height: 34px; background: currentColor; opacity: .6;
+  transform-origin: top;
+  animation: role-fio 2.6s var(--suave) infinite;
+}
+.role.is-visivel { opacity: .8; }
+@keyframes role-fio {
+  0%   { transform: scaleY(0); }
+  45%  { transform: scaleY(1); transform-origin: top; }
+  55%  { transform: scaleY(1); transform-origin: bottom; }
+  100% { transform: scaleY(0); transform-origin: bottom; }
+}
+
+/* --------------------------------------------------------------------------
+   Modo animado (ligado pelo JS)
+   -------------------------------------------------------------------------- */
+.abertura-animada .abertura {
+  /* A pista: 100 de tela + o trecho de rolagem que conduz a sequência */
+  height: 340vh;
+  height: 340svh;
+}
+.abertura-animada .abertura__palco { position: sticky; top: 0; }
+
+/* Antes do primeiro quadro calculado, esconde o papel para não piscar marfim */
+.abertura-animada:not(.abertura-pronta) .camada--papel { visibility: hidden; }
+
+/* Cena 2: o selo "A." surge sozinho, com um fade delicado, ao carregar */
+.abertura-animada .camada--lacre .marca { opacity: 0; transition: opacity 1.8s var(--suave) .25s; }
+.abertura-animada.abertura-pronta .camada--lacre .marca { opacity: 1; }
+
+@media (max-width: 720px) {
+  .abertura-animada .abertura { height: 290vh; height: 290svh; }
+}

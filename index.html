@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AVAL. — Toda reputação começa com um aval.</title>
+  <meta name="description" content="AVAL. é uma revista brasileira de entrevistas, perfis e trajetórias. Histórias que revelam o caminho por trás de um nome.">
+  <meta name="theme-color" content="#C5332A">
+
+  <script>document.documentElement.classList.add('js')</script>
+  <link rel="preload" href="assets/fontes/bodoni-moda-latin-opsz-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/abertura.css">
+  <link rel="stylesheet" href="css/secoes.css">
+</head>
+<body>
+
+  <!-- Cabeçalho fixo: só aparece depois que a abertura termina -->
+  <header class="topo" id="topo" data-tema="papel">
+    <a class="topo__marca" href="#abertura" aria-label="AVAL. — voltar ao início">AVAL<span class="ponto">.</span></a>
+    <nav class="topo__nav" aria-label="Seções">
+      <a href="#olhar">O olhar</a>
+      <a href="#edicao-01">Edição 01</a>
+      <a href="https://www.instagram.com/revistaaval/" target="_blank" rel="noopener">Instagram</a>
+    </nav>
+  </header>
+
+  <main>
+
+    <!-- ============================================================
+         ABERTURA — "O selo se abre"
+         Sem JavaScript (ou com movimento reduzido) este bloco já é a
+         composição final, estática. O js/abertura.js transforma o
+         bloco numa sequência guiada pela rolagem.
+         ============================================================ -->
+    <section class="abertura" id="abertura" aria-label="Abertura">
+      <div class="abertura__palco">
+
+        <!-- Camada "papel": a página marfim, com o conteúdo real -->
+        <div class="camada camada--papel">
+          <div class="cena">
+            <div class="cena__alto">
+              <div class="marca-slot">
+                <p class="marca" data-marca aria-label="AVAL.">AVAL<span class="ponto">.</span></p>
+              </div>
+              <p class="rotulo cena__temas" data-surge>Entrevistas <i>·</i> Perfis <i>·</i> Trajetórias</p>
+            </div>
+
+            <h1 class="manchete">
+              <span class="linha"><span>Toda reputação</span></span>
+              <span class="linha"><span>começa com</span></span>
+              <span class="linha"><span>um <em>aval.</em></span></span>
+            </h1>
+
+            <p class="rotulo cena__edicao" data-surge>Edição 01 <i>·</i> Em produção</p>
+          </div>
+        </div>
+
+        <!-- A camada "lacre" (vermelha) é criada pelo JS, por baixo do papel -->
+
+        <button class="pular" type="button" id="pular" hidden>Pular abertura</button>
+        <p class="role" id="role" aria-hidden="true" hidden><span>Role</span></p>
+      </div>
+    </section>
+
+    <!-- ============================================================
+         1 · O OLHAR DA AVAL.
+         ============================================================ -->
+    <section class="secao olhar" id="olhar" data-tema="papel">
+      <div class="grade">
+        <p class="rotulo olhar__rotulo" data-revelar>O olhar da AVAL.</p>
+        <div class="olhar__texto">
+          <p class="lide" data-revelar>Uma revista brasileira de entrevistas, perfis e trajetórias.</p>
+          <p class="lide lide--eco" data-revelar>Histórias que revelam o caminho por trás de um <em>nome.</em></p>
+        </div>
+      </div>
+
+      <ol class="pilares">
+        <li data-revelar>
+          <span class="pilares__n">I</span>
+          <h3>Entrevistas</h3>
+        </li>
+        <li data-revelar>
+          <span class="pilares__n">II</span>
+          <h3>Perfis</h3>
+        </li>
+        <li data-revelar>
+          <span class="pilares__n">III</span>
+          <h3>Trajetórias</h3>
+        </li>
+      </ol>
+    </section>
+
+    <!-- ============================================================
+         2 · EDIÇÃO 01
+         ============================================================ -->
+    <section class="secao edicao" id="edicao-01" data-tema="nanquim">
+      <div class="grade edicao__grade">
+
+        <!-- Capa provisória, só com tipografia.
+             Quando a capa real existir: coloque o arquivo em
+             assets/imagens/ e troque o conteúdo do <figure> por
+             <img src="assets/imagens/capa-01.jpg" alt="Capa da Edição 01 da AVAL."> -->
+        <figure class="capa" data-revelar="capa">
+          <div class="capa__folha">
+            <p class="capa__marca" aria-hidden="true">AVAL<span>.</span></p>
+            <p class="capa__numero" aria-hidden="true">01</p>
+            <p class="capa__pe rotulo"><span>Edição 01</span><span>Em produção</span></p>
+          </div>
+        </figure>
+
+        <div class="edicao__texto">
+          <p class="rotulo" data-revelar>Primeira edição</p>
+          <h2 class="titulo" data-revelar>Edição <span class="num">01</span></h2>
+          <p class="estado" data-revelar><span class="estado__ponto"></span>Em produção</p>
+          <p class="corpo" data-revelar>A primeira edição da AVAL. está sendo preparada. A capa será revelada aqui.</p>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ============================================================
+         3 · ACOMPANHE A AVAL.
+         ============================================================ -->
+    <section class="secao acompanhe" id="acompanhe" data-tema="lacre">
+      <div class="acompanhe__miolo">
+        <p class="rotulo" data-revelar>Acompanhe</p>
+        <h2 class="titulo titulo--grande" data-revelar>Acompanhe<br>a AVAL.</h2>
+        <a class="acompanhe__link" data-revelar href="https://www.instagram.com/revistaaval/" target="_blank" rel="noopener">
+          <span>@revistaaval</span>
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 18 18 6M8 6h10v10" fill="none" stroke="currentColor" stroke-width="1.25"/></svg>
+        </a>
+        <p class="rotulo acompanhe__onde" data-revelar>No Instagram</p>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="rodape" data-tema="nanquim">
+    <p class="rodape__marca">AVAL<span class="ponto">.</span></p>
+    <p class="rodape__frase">Toda reputação começa com um aval.</p>
+    <p class="rotulo rodape__linha">© 2026 AVAL. <i>·</i> Entrevistas <i>·</i> Perfis <i>·</i> Trajetórias</p>
+  </footer>
+
+  <script src="js/abertura.js" defer></script>
+  <script src="js/site.js" defer></script>
+</body>
+</html>
