@@ -26,10 +26,6 @@
 .camada--lacre { background: var(--lacre);  color: var(--marfim);  z-index: 1; }
 .camada--lacre .ponto { color: var(--marfim); }
 
-/* Feixes nanquim que cruzam a tela na troca de cor (criados e movidos pelo JS) */
-.feixes { position: absolute; inset: 0; z-index: 3; pointer-events: none; }
-.feixe  { position: absolute; inset: 0; background: var(--nanquim); clip-path: polygon(0 0, 0 0, 0 0); }
-
 /* --------------------------------------------------------------------------
    A cena: marca no alto, manchete no centro, linha da edição embaixo
    -------------------------------------------------------------------------- */

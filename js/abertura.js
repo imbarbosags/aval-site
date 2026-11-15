@@ -10,14 +10,12 @@
    Trechos de t (ajuste aqui o ritmo):
    ========================================================================== */
 const RITMO = {
-  abrir:    [0.04, 0.38],  // cena 3 — "A." se abre em "AVAL."
-  papel:    [0.40, 0.52],  // cena 4a — a página marfim sobe até parar abaixo da marca
-  feixes:   [0.50, 0.66],  // cena 4b — dois feixes nanquim cruzam a tela e concluem a troca de cor
-  assentar: [0.66, 0.86],  // cena 5 — a marca diminui e vai para o alto
+  abrir:    [0.04, 0.40],  // cena 3 — "A." se abre em "AVAL."
+  papel:    [0.42, 0.66],  // cena 4 — a página marfim sobe
+  assentar: [0.64, 0.86],  // cena 5 — a marca diminui e vai para o alto
   manchete: [0.74, 0.90],  // cena 5 — linhas da frase (cada linha atrasa um pouco)
   apoio:    [0.86, 0.97],  // cena 5 — "Entrevistas · Perfis…" e "Edição 01…"
 };
-const PARADA       = 0.70;    // onde o papel para antes dos feixes (fração da altura da tela, a partir do topo)
 const DURACAO_PULO = 4200;    // "Pular abertura": tempo (ms) para percorrer a sequência inteira
 const ATRASO_LINHA = 0.045;   // atraso entre as linhas da manchete
 const SUAVIZACAO   = 0.14;    // 1 = cola na rolagem; menor = mais "seda"
@@ -126,15 +124,6 @@ const SUAVIZACAO   = 0.14;    // 1 = cola na rolagem; menor = mais "seda"
     lacre.appendChild(cenaLacre);
     palco.insertBefore(lacre, papel);
 
-    // Os dois feixes nanquim ficam por cima do papel. São faixas inclinadas
-    // desenhadas com clip-path; o JS só muda os quatro cantos de cada uma.
-    const feixes = document.createElement('div');
-    feixes.className = 'feixes';
-    feixes.setAttribute('aria-hidden', 'true');
-    feixes.innerHTML = '<div class="feixe"></div><div class="feixe"></div>';
-    palco.appendChild(feixes);
-    const [feixe1, feixe2] = feixes.children;
-
     const marcas = [
       montarMarca(papel.querySelector('[data-marca]'), M),
       montarMarca(lacre.querySelector('[data-marca]'), M),
@@ -204,41 +193,9 @@ const SUAVIZACAO   = 0.14;    // 1 = cola na rolagem; menor = mais "seda"
         });
       }
 
-      // cena 4 — primeiro o papel sobe até a PARADA; depois uma linha inclinada
-      // varre a tela da esquerda para a direita. O papel aparece em tudo que
-      // está abaixo da parada OU à esquerda dessa linha. Os dois feixes andam
-      // colados à frente da linha, escondendo o instante em que a cor troca.
-      const f = entraSai(trecho(t, RITMO.feixes));
-      const H = G.h, W = G.w;
-      const Y = H * (1 - q * (1 - PARADA));                 // topo do papel
-      const inc   = H * 0.42;                               // inclinação: quanto o topo está à frente da base
-      const larg1 = Math.max(W * 0.07, 44);                 // feixe largo (colado na linha)
-      const vao   = Math.max(W * 0.035, 22);                // respiro entre os dois
-      const larg2 = Math.max(W * 0.022, 14);                // feixe fino (vai na frente)
-      const tudo  = larg1 + vao + larg2;
-      const base  = -inc - tudo - 2 + f * (W + inc + tudo + 4);   // x da linha no pé da tela
-      const topo  = base + inc;                                    // x da linha no alto da tela
-      const xEm   = yy => topo + (base - topo) * (yy / H);         // x da linha numa altura qualquer
-
-      let pts;
-      if (topo <= 0)      pts = [[0, Y], [W, Y], [W, H], [0, H]];                    // linha ainda fora: só a faixa de baixo
-      else if (base >= W) pts = [[0, 0], [W, 0], [W, H], [0, H]];                    // linha já passou: página cheia
-      else {
-        pts = [[0, 0]];
-        if (topo > W) pts.push([W, 0], [W, H * (topo - W) / (topo - base)]);
-        else pts.push([topo, 0]);
-        const xi = xEm(Y);
-        if (xi < 0) pts.push([0, H * topo / (topo - base)], [0, Y]);
-        else pts.push([Math.min(xi, W), Y]);
-        pts.push([W, Y], [W, H], [0, H]);
-      }
-      papel.style.clipPath = 'polygon(' + pts.map(p => p[0].toFixed(1) + 'px ' + p[1].toFixed(1) + 'px').join(',') + ')';
-      papel.style.visibility = (q <= 0 && f <= 0) ? 'hidden' : 'visible';
-
-      const faixa = (d1, d2) => f <= 0 || f >= 1 ? 'polygon(0 0,0 0,0 0)'
-        : `polygon(${(base + d1).toFixed(1)}px ${H}px,${(base + d2).toFixed(1)}px ${H}px,${(topo + d2).toFixed(1)}px 0px,${(topo + d1).toFixed(1)}px 0px)`;
-      feixe1.style.clipPath = faixa(0, larg1);
-      feixe2.style.clipPath = faixa(larg1 + vao, tudo);
+      // cena 4 — o papel é recortado de cima: 100% = escondido, 0% = página cheia
+      papel.style.clipPath = `inset(${((1 - q) * 100).toFixed(3)}% 0 0 0)`;
+      papel.style.visibility = q <= 0 ? 'hidden' : 'visible';
 
       // cena 5 — manchete linha a linha, depois os textos de apoio
       linhas.forEach((s, i) => {
@@ -252,7 +209,7 @@ const SUAVIZACAO   = 0.14;    // 1 = cola na rolagem; menor = mais "seda"
       });
 
       // controles
-      pular.classList.toggle('is-sobre-papel', Y < G.pularY);
+      pular.classList.toggle('is-sobre-papel', (1 - q) * G.h < G.pularY);
       pular.classList.toggle('is-oculto', t > 0.9);
       if (t > 0.015) role.classList.remove('is-visivel');
     }
